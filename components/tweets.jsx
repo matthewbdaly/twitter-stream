@@ -6,7 +6,7 @@ var Tweets = React.createClass({
     return (
       <div>
         <h1>Tweets</h1>
-        <TweetList data={this.props.data} />
+        <TweetList />
       </div>
     )
   }
