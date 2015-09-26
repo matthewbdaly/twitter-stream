@@ -78,7 +78,7 @@ app.get('/', function (req, res) {
       var markup = React.renderToString(Tweets({ data: tweet_list }));
       res.render('index', {
         markup: markup,
-        state: tweet_list
+        state: JSON.stringify(tweet_list)
       });
     }
   });
