@@ -75,7 +75,7 @@ app.get('/', function (req, res) {
       });
 
       // Render page
-      var markup = React.renderToString(Tweets({ data: tweet_list }));
+      var markup = React.renderToString(Tweets({ data: tweet_list.reverse() }));
       res.render('index', {
         markup: markup,
         state: JSON.stringify(tweet_list)
@@ -101,6 +101,11 @@ io.sockets.on('connection', function (socket) {
 
       // Persist it to a Redis list
       redisclient.rpush('stream:tweets', JSON.stringify(tweet));
+    });
+
+    // Handle errors
+    stream.on('error', function (error) {
+      console.log(error);
     });
   });
 
