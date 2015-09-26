@@ -12,10 +12,10 @@ var Tweets = React.createClass({
 
     // Handle incoming messages
     socket.on('message', function (data) {
-        // Insert the message
-        var tweets = that.props.data;
-        tweets.push(data);
-        that.setProps({data: tweets});
+      // Insert the message
+      var tweets = that.props.data;
+      tweets.push(JSON.parse(data));
+      that.setProps({data: tweets});
     });
   },
   getInitialState: function () {

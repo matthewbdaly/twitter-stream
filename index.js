@@ -77,11 +77,11 @@ io.sockets.on('connection', function (socket) {
 
   client.stream('statuses/filter', {track: 'javascript'}, function(stream) {
     stream.on('data', function(tweet) {
-      io.sockets.emit('message', tweet);
-    });
+      // Publish it
+      redisclient.publish('tweets', JSON.stringify(tweet));
 
-    stream.on('error', function(error) {
-      throw error;
+      // Persist it to a Redis list
+      redisclient.rpush('stream:tweets', tweet);
     });
   });
 
