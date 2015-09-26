@@ -15,6 +15,7 @@ var bodyParser = require('body-parser');
 var hbs = require('hbs');
 var morgan = require('morgan');
 var React = require('react');
+var Tweets = React.createFactory(require('./components/tweets.jsx'));
 
 // Set up Twitter client
 var client = new Twitter({
@@ -62,7 +63,25 @@ app.use(express.static(__dirname + '/static'));
 
 // Render main view
 app.get('/', function (req, res) {
-  res.render('index');
+  // Get tweets
+  redisclient.lrange('stream:tweets', 0, -1, function (err, tweets) {
+    if (err) {
+      console.log(err);
+    } else {
+      // Get tweets
+      var tweet_list = [];
+      tweets.forEach(function (tweet, i) {
+        tweet_list.push(JSON.parse(tweet));
+      });
+
+      // Render page
+      var markup = React.renderToString(Tweets({ data: tweet_list }));
+      res.render('index', {
+        markup: markup,
+        state: tweet_list
+      });
+    }
+  });
 });
 
 // Listen
@@ -81,7 +100,7 @@ io.sockets.on('connection', function (socket) {
       redisclient.publish('tweets', JSON.stringify(tweet));
 
       // Persist it to a Redis list
-      redisclient.rpush('stream:tweets', tweet);
+      redisclient.rpush('stream:tweets', JSON.stringify(tweet));
     });
   });
 
