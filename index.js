@@ -94,7 +94,7 @@ io.sockets.on('connection', function (socket) {
   // Subscribe to the Redis channel
   subscribe.subscribe('tweets');
 
-  client.stream('statuses/filter', {track: 'javascript'}, function(stream) {
+  client.stream('statuses/filter', {track: 'javascript', lang: 'en'}, function(stream) {
     stream.on('data', function(tweet) {
       // Publish it
       redisclient.publish('tweets', JSON.stringify(tweet));
