@@ -50,6 +50,11 @@ app.use(bodyParser.urlencoded({
 // Serve static files
 app.use(express.static(__dirname + '/static'));
 
+// Render main view
+app.get('/', function (req, res) {
+  res.render('index');
+});
+
 client.stream('statuses/filter', {track: 'javascript'}, function(stream) {
   stream.on('data', function(tweet) {
     console.log(tweet.text);
