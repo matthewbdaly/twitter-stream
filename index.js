@@ -4,7 +4,6 @@
 require('babel/register');
 
 // Get dependencies
-var Twitter = require('twitter');
 
 var express = require('express');
 var app = express();
@@ -17,21 +16,13 @@ var morgan = require('morgan');
 var React = require('react');
 var Tweets = React.createFactory(require('./components/tweets.jsx'));
 
-// Set up Twitter client
-var client = new Twitter({
-  consumer_key: process.env.TWITTER_CONSUMER_KEY,
-  consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-  access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
-  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
-});
-
 // Set up connection to Redis
-var redisclient, subscribe;
+var redis, subscribe;
 if (process.env.REDIS_URL) {
-  redisclient = require('redis').createClient(process.env.REDIS_URL);
+  redis = require('redis').createClient(process.env.REDIS_URL);
   subscribe = require('redis').createClient(process.env.REDIS_URL);
 } else {
-  redisclient = require('redis').createClient();
+  redis = require('redis').createClient();
   subscribe = require('redis').createClient();
 }
 
@@ -64,7 +55,7 @@ app.use(express.static(__dirname + '/static'));
 // Render main view
 app.get('/', function (req, res) {
   // Get tweets
-  redisclient.lrange('stream:tweets', 0, -1, function (err, tweets) {
+  redis.lrange('stream:tweets', 0, -1, function (err, tweets) {
     if (err) {
       console.log(err);
     } else {
@@ -94,30 +85,14 @@ io.sockets.on('connection', function (socket) {
   // Subscribe to the Redis channel
   subscribe.subscribe('tweets');
 
-  client.stream('statuses/filter', {track: 'javascript', lang: 'en'}, function(stream) {
-    stream.on('data', function(tweet) {
-      // Publish it
-      redisclient.publish('tweets', JSON.stringify(tweet));
-
-      // Persist it to a Redis list
-      redisclient.rpush('stream:tweets', JSON.stringify(tweet));
-    });
-
-    // Handle errors
-    stream.on('error', function (error) {
-      console.log(error);
-    });
-
-    // Handle disconnect
-    socket.on('disconnect', function () {
-      stream = null;
-      subscribe.removeListener('message', callback);
-    });
-  });
-
   // Handle receiving messages
   var callback = function (channel, data) {
     socket.emit('message', data);
   };
   subscribe.on('message', callback);
+
+  // Handle disconnect
+  socket.on('disconnect', function () {
+    subscribe.removeListener('message', callback);
+  });
 });
