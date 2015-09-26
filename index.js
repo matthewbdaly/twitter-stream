@@ -107,6 +107,12 @@ io.sockets.on('connection', function (socket) {
     stream.on('error', function (error) {
       console.log(error);
     });
+
+    // Handle disconnect
+    socket.on('disconnect', function () {
+      stream = null;
+      subscribe.removeListener('message', callback);
+    });
   });
 
   // Handle receiving messages
@@ -114,9 +120,4 @@ io.sockets.on('connection', function (socket) {
     socket.emit('message', data);
   };
   subscribe.on('message', callback);
-
-  // Handle disconnect
-  socket.on('disconnect', function () {
-    subscribe.removeListener('message', callback);
-  });
 });
