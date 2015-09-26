@@ -24,6 +24,16 @@ var client = new Twitter({
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 });
 
+// Set up connection to Redis
+var redisclient, subscribe;
+if (process.env.REDIS_URL) {
+  redisclient = require('redis').createClient(process.env.REDIS_URL);
+  subscribe = require('redis').createClient(process.env.REDIS_URL);
+} else {
+  redisclient = require('redis').createClient();
+  subscribe = require('redis').createClient();
+}
+
 // Set up templating
 app.set('views', __dirname + '/views');
 app.set('view engine', "hbs");
