@@ -6,7 +6,7 @@ var TweetList = React.createClass({
     var that = this;
     var tweetNodes = this.props.data.map(function (item, index) {
       return (
-        <TweetItem text={item.text}></TweetItem>
+        <TweetItem key={index} text={item.text}></TweetItem>
       );
     });
     return (
