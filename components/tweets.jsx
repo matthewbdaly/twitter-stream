@@ -4,13 +4,18 @@ var TweetList = require('./tweetlist.jsx');
 
 var Tweets = React.createClass({
   componentDidMount: function () {
+    // Get reference to this item
+    var that = this;
+    
     // Set up the connection
     var socket = io.connect(window.location.href);
 
     // Handle incoming messages
     socket.on('message', function (data) {
         // Insert the message
-        console.log(data);
+        var tweets = that.props.data;
+        tweets.push(data);
+        that.setProps({data: tweets});
     });
   },
   getInitialState: function () {
