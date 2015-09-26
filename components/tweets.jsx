@@ -1,6 +1,7 @@
 var React = require('react');
 var io = require('socket.io-client');
 var TweetList = require('./tweetlist.jsx');
+var _ = require('lodash');
 
 var Tweets = React.createClass({
   componentDidMount: function () {
@@ -15,6 +16,9 @@ var Tweets = React.createClass({
       // Insert the message
       var tweets = that.props.data;
       tweets.push(JSON.parse(data));
+      tweets = _.sortBy(tweets, function (item) {
+        return item.created_at;
+      }).reverse();
       that.setProps({data: tweets});
     });
   },
