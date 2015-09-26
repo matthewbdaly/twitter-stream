@@ -72,6 +72,9 @@ console.log("Listening on port " + port);
 
 // Handle connections
 io.sockets.on('connection', function (socket) {
+  // Subscribe to the Redis channel
+  subscribe.subscribe('tweets');
+
   client.stream('statuses/filter', {track: 'javascript'}, function(stream) {
     stream.on('data', function(tweet) {
       io.sockets.emit('message', tweet);
@@ -80,5 +83,16 @@ io.sockets.on('connection', function (socket) {
     stream.on('error', function(error) {
       throw error;
     });
+  });
+
+  // Handle receiving messages
+  var callback = function (channel, data) {
+    socket.emit('message', data);
+  };
+  subscribe.on('message', callback);
+
+  // Handle disconnect
+  socket.on('disconnect', function () {
+    subscribe.removeListener('message', callback);
   });
 });
