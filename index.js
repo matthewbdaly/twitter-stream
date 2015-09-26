@@ -55,16 +55,20 @@ app.get('/', function (req, res) {
   res.render('index');
 });
 
-client.stream('statuses/filter', {track: 'javascript'}, function(stream) {
-  stream.on('data', function(tweet) {
-    console.log(tweet.text);
-  });
- 
-  stream.on('error', function(error) {
-    throw error;
+// Listen
+var io = require('socket.io')({
+}).listen(app.listen(port));
+console.log("Listening on port " + port);
+
+// Handle connections
+io.sockets.on('connection', function (socket) {
+  client.stream('statuses/filter', {track: 'javascript'}, function(stream) {
+    stream.on('data', function(tweet) {
+      io.sockets.emit('message', tweet);
+    });
+
+    stream.on('error', function(error) {
+      throw error;
+    });
   });
 });
-
-// Listen
-app.listen(port);
-console.log("Listening on port " + port);
