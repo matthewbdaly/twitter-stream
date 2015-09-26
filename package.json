@@ -1,0 +1,36 @@
+{
+  "name": "twitter-stream",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "author": "Matthew Daly <matthewbdaly@gmail.com> (http://matthewdaly.co.uk/)",
+  "license": "ISC",
+  "dependencies": {
+    "babel": "^5.8.23",
+    "compression": "^1.5.2",
+    "express": "^4.13.3",
+    "hbs": "^3.1.1",
+    "jquery": "^2.1.4",
+    "lodash": "^3.10.1",
+    "morgan": "^1.6.1",
+    "react": "^0.13.3",
+    "twitter": "^1.2.5"
+  },
+  "devDependencies": {
+    "browserify": "^11.2.0",
+    "chai": "^3.3.0",
+    "gulp": "^3.9.0",
+    "gulp-compass": "^2.1.0",
+    "gulp-coveralls": "^0.1.4",
+    "gulp-istanbul": "^0.10.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-mocha": "^2.1.3",
+    "jshint-stylish": "^2.0.1",
+    "reactify": "^1.1.1",
+    "request": "^2.64.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
