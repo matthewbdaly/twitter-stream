@@ -3,7 +3,7 @@ var React = require('react');
 var TweetItem = React.createClass({
   render: function () {
     return (
-      <li>{this.props.text}</li>
+      <li className="list-group-item">{this.props.text}</li>
     );
   }
 });

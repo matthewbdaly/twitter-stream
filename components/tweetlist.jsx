@@ -10,7 +10,7 @@ var TweetList = React.createClass({
       );
     });
     return (
-      <ul className="tweets">
+      <ul className="tweets list-group">
         {tweetNodes}
       </ul>
     )
