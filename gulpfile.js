@@ -1,12 +1,14 @@
 var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
 var browserify = require('browserify');
 var reactify = require('reactify');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 var coveralls = require('gulp-coveralls');
 var compass = require('gulp-compass');
+var uglify = require('gulp-uglify');
 
 var paths = {
     scripts: ['components/*.jsx'],
@@ -63,7 +65,9 @@ gulp.task('react', function () {
   return browserify({ entries: ['components/index.jsx'], debug: true })
     .transform(reactify)
     .bundle()
-    .pipe(source('index.js'))
+    .pipe(source('bundle.js'))
+    .pipe(buffer())
+    .pipe(uglify())
     .pipe(gulp.dest('static/jsx/'));
 });
 
