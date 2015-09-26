@@ -10,7 +10,6 @@ var app = express();
 var compression = require('compression');
 var port = process.env.PORT || 5000;
 var base_url = process.env.BASE_URL || 'http://localhost:5000';
-var bodyParser = require('body-parser');
 var hbs = require('hbs');
 var morgan = require('morgan');
 var React = require('react');
@@ -42,12 +41,6 @@ app.use(compression());
 
 // Set URL
 app.set('base_url', base_url);
-
-// Handle POST data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-      extended: true
-}));
 
 // Serve static files
 app.use(express.static(__dirname + '/static'));
