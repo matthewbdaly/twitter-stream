@@ -1,8 +1,6 @@
 /*jslint node: true */
 'use strict';
 
-require('babel/register');
-
 // Get dependencies
 var Twitter = require('twitter');
 
